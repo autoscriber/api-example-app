@@ -1,0 +1,77 @@
+body {
+	margin: 20px;
+	font-family: 'Roboto', sans-serif;
+	color: #00232d;
+}
+
+button {
+	outline: none;
+	background-color: #f0f0f0; /* Light gray background */
+	border: 1px solid #dcdcdc; /* Subtle border */
+	color: #00232dc3; /* Text color to match the theme */
+	padding: 10px 20px; /* Padding for size */
+	font-family: 'Roboto', sans-serif; /* Consistent font style */
+	text-align: center; /* Center text */
+	text-decoration: none; /* No underline */
+	display: inline-block; /* Allows setting dimensions */
+	font-size: 16px; /* Readable text size */
+	margin: 4px 2px; /* Spacing around buttons */
+	transition: all 0.3s; /* Smooth transition for hover effects */
+	cursor: pointer; /* Cursor indicates clickable */
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+	border-radius: 5px; /* Rounded corners */
+}
+
+button:hover {
+	background-color: #e6e6e6; /* Slightly darker on hover for feedback */
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Increased shadow for depth effect */
+}
+
+a {
+	color: #63696a;
+	text-decoration-style: dashed;
+	text-decoration-color: lightgrey; /* Makes the underline a light grey */
+}
+
+.info-box {
+	padding: 20px;
+	margin-bottom: 20px;
+	background-color: #f9f9f9;
+	border-left: 5px solid #00232d49;
+	border-radius: 4px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adds subtle shadow for depth */
+}
+
+nav {
+	padding: 20px;
+	margin-bottom: 20px;
+	background-color: #f9f9f9;
+	border-left: 5px solid #00b7f0;
+}
+
+nav ol {
+	list-style: none; /* Removes default list styling */
+	padding: 0;
+	margin: 0;
+}
+
+nav li {
+	margin-bottom: 0.5rem; /* Adds a little space between list items */
+}
+
+nav li:last-child {
+	margin-bottom: 0; /* Removes margin from the last item */
+}
+
+nav a {
+	color: #00232d;
+	text-decoration: none;
+	display: block; /* Makes the links block elements to fill the nav */
+	padding: 0.5rem 1rem; /* Adds padding for better touch targets */
+	border-radius: 4px; /* Rounds the corners of the link backgrounds */
+	transition: background-color 0.2s; /* Smooth background color transition */
+}
+
+nav a:hover {
+	background-color: #e9ecef; /* Changes background on hover */
+}

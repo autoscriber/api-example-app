@@ -16,7 +16,7 @@ export async function POST({ request, url }) {
 			communication: {
 				method: 'webhook',
 				webhook: {
-					uri: url.origin + '/webhook/callback',
+					url: url.origin + '/webhook/callback',
 					headers: { Authorization: basicAuth }
 				}
 			},

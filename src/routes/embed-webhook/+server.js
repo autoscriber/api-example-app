@@ -20,7 +20,7 @@ export async function POST({ url }) {
 				persist: true,
 				displayName: 'Demo patient',
 				webhook: {
-					uri: url.origin + '/embed-webhook/callback',
+					url: url.origin + '/embed-webhook/callback',
 					headers: { Authorization: basicAuth }
 				},
 				theme: {

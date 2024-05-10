@@ -33,7 +33,7 @@ export async function POST({ request }) {
 						primaryColor: '#00b7f0' // '#9E2F3C'
 					},
 					languages: ['nl', 'en'],
-					out_types: ['episodes/soap_nl', 'note/standard_en'],
+					out_types: ['note/standard_nl'],
 					newTemplate: true,
 					askConsent: true,
 					toggleCodes: false

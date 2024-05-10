@@ -9,7 +9,7 @@ export async function GET() {
 		},
 		body: JSON.stringify({
 			communication: { method: 'sse' },
-			in: [{ type: 'audio/chunks', audioType: 'webm', language: 'en' }],
+			in: [{ type: 'audio/conversation', audioType: 'webm', language: 'en' }],
 			out: [{ type: 'note/standard_en' }]
 		})
 	});

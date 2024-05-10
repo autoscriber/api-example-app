@@ -10,8 +10,8 @@ export async function GET() {
 		body: JSON.stringify({
 			region: 'any',
 			communication: { method: 'socketio' },
-			in: [{ type: 'audio/chunks', audioType: 'webm', language: 'en' }],
-			out: [{ type: 'note/standard_en' }]
+			in: [{ type: 'conversation', audioType: 'webm', language: 'nl' }],
+			out: [{ type: 'soep_nl' }]
 		})
 	});
 	return json(await response.json());

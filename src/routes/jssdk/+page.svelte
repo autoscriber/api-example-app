@@ -55,6 +55,8 @@
 		// Assign response from /scribe endpoint to our config variable
 		let config = await response.json();
 
+		console.log(config);
+
 		// Attach our callback function to the sdk, so that state updates can be triggered in our callback function
 		config.callbackfn = stateListener;
 
@@ -93,67 +95,74 @@
 	</p>
 </div>
 
-{#if state && !state.conversation?.final}
-	<div class="container">
-		{#if microphones.length > 0}
-			<select bind:value={selectedMicrophone} class="dropdown">
-				<option disabled selected>{dropdownMessage}</option>
-				{#each microphones as mic}
-					<option value={mic.deviceId}>{mic.name}</option>
-				{/each}
-			</select>
-		{/if}
+<div class="info-box recorder">
+	{#if state && !state.conversation?.final}
+		<div class="container">
+			{#if microphones.length > 0}
+				<select bind:value={selectedMicrophone} class="dropdown">
+					<option disabled selected>{dropdownMessage}</option>
+					{#each microphones as mic}
+						<option value={mic.deviceId}>{mic.name}</option>
+					{/each}
+				</select>
+			{/if}
 
-		<button
-			class="btn"
-			disabled={selectedMicrophone === 'Please select a microphone'}
-			on:click={() => {
-				if (isRecording === undefined) {
-					startRecording();
-				} else {
-					stopRecording();
-				}
-			}}>{isRecording ? 'Stop Recording' : 'Start Recording'}</button
-		>
-	</div>
-{/if}
+			<button
+				class="btn"
+				disabled={selectedMicrophone === 'Please select a microphone'}
+				on:click={() => {
+					if (isRecording === undefined) {
+						startRecording();
+					} else {
+						stopRecording();
+					}
+				}}>{isRecording ? 'Stop Recording' : 'Start Recording'}</button
+			>
+		</div>
+	{/if}
 
-{#if state && state.conversation?.final}
-	<div class="container">
-		{#if regenerateAvailableTemplates.length > 0}
-			<select bind:value={regenerateSelectedTemplate} class="dropdown">
-				<option disabled selected>{regenerateSelectedTemplate}</option>
-				{#each regenerateAvailableTemplates as template}
+	{#if state && state.conversation?.final}
+		<div class="container">
+			{#if regenerateAvailableTemplates.length > 0}
+				<select bind:value={regenerateSelectedTemplate} class="dropdown">
+					<option disabled selected>{regenerateSelectedTemplate}</option>
+					{#each regenerateAvailableTemplates as template}
+						<option value={template}>{template}</option>
+					{/each}
+				</select>
+			{/if}
+
+			<button
+				class="btn"
+				disabled={regenerateSelectedTemplate === 'Please select a template to regenerate'}
+				on:click={regenerateOutput}>Regenerate output</button
+			>
+		</div>
+
+		{#if availableTemplates.length > 0}
+			<select bind:value={selectedTemplate} class="dropdown">
+				<option disabled selected>{selectedTemplate}</option>
+				{#each availableTemplates as template}
 					<option value={template}>{template}</option>
 				{/each}
 			</select>
 		{/if}
-
 		<button
 			class="btn"
-			disabled={regenerateSelectedTemplate === 'Please select a template to regenerate'}
-			on:click={regenerateOutput}>Regenerate output</button
+			disabled={selectedTemplate === 'Please select a template to generate'}
+			on:click={generateNewOutput}>Generate new note</button
 		>
-	</div>
-
-	{#if availableTemplates.length > 0}
-		<select bind:value={selectedTemplate} class="dropdown">
-			<option disabled selected>{selectedTemplate}</option>
-			{#each availableTemplates as template}
-				<option value={template}>{template}</option>
-			{/each}
-		</select>
 	{/if}
-	<button
-		class="btn"
-		disabled={selectedTemplate === 'Please select a template to generate'}
-		on:click={generateNewOutput}>Generate new note</button
-	>
-{/if}
+</div>
 
 <ResponseBox {state} />
 
 <style scoped>
+	.recorder {
+		margin-top: 75px;
+		border-left: 5px solid #f00800;
+	}
+
 	.container {
 		width: 100%;
 		margin-bottom: 5px;

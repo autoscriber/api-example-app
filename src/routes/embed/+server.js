@@ -32,8 +32,7 @@ export async function POST({ request }) {
 					theme: {
 						primaryColor: '#00b7f0' // '#9E2F3C'
 					},
-					languages: ['nl', 'en'],
-					out_types: ['note/standard_nl'],
+					specialty: 'GP',
 					newTemplate: true,
 					askConsent: true,
 					toggleCodes: false

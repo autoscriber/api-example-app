@@ -8,6 +8,7 @@
 
 	let state;
 	let socket;
+	let errorMessage;
 
 	async function handleAudioChunk(event) {
 		if (event.detail.index === 0) {
@@ -22,18 +23,21 @@
 
 	async function connect() {
 		const response = await fetch('/socketio');
-		const { endpoint, path, token } = await response.json();
-		socket = io(endpoint, {
-			path,
-			query: { access_token: token }
-		});
-		socket.on('connect', () => {
-			console.log('Connected to socket:', socket.id);
-		});
-		socket.on('patch', (data) => {
-			state = applyPatch(deepClone(state), deepClone(data.operations)).newDocument;
-		});
-		socket.on('finalized', () => disconnect());
+		const { error, endpoint, path, token } = await response.json();
+		if (error) errorMessage = error;
+		else {
+			socket = io(endpoint, {
+				path,
+				query: { access_token: token }
+			});
+			socket.on('connect', () => {
+				console.log('Connected to socket:', socket.id);
+			});
+			socket.on('patch', (data) => {
+				state = applyPatch(deepClone(state), deepClone(data.operations)).newDocument;
+			});
+			socket.on('finalized', () => disconnect());
+		}
 	}
 
 	function disconnect() {
@@ -57,5 +61,9 @@
 	</p>
 </div>
 
-<AudioRecorder chunkInterval={5000} on:audioChunk={handleAudioChunk} />
+<AudioRecorder chunkInterval={2000} on:audioChunk={handleAudioChunk} />
 <ResponseBox {state} />
+
+{#if errorMessage}
+	<p>Error: {errorMessage}</p>
+{/if}

@@ -36,3 +36,10 @@
 		</li>
 	</ol>
 </nav>
+<h4>SDK</h4>
+<nav>
+	<ol>
+		<li><a href="/jssdk">Method Javascript SDK</a></li>
+	</ol>
+</nav>
+

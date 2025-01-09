@@ -19,15 +19,19 @@ export async function POST({ url }) {
 			config: {
 				persist: true,
 				displayName: 'Demo patient',
+				// webhook: {
+				// 	url: url.origin + '/embed-webhook/callback',
+				// 	headers: { Authorization: basicAuth }
+				// },
 				webhook: {
-					url: url.origin + '/embed-webhook/callback',
-					headers: { Authorization: basicAuth }
+					url: 'mllp://cloverleaftest.rdgg.nl:2181',
+					headers: { pid: 'pid', obr: 'obr' }
 				},
 				theme: {
 					primaryColor: '#00b7f0' // '#9E2F3C'
 				},
 				languages: ['nl', 'en'],
-				out_types: ['episodes/soap_nl'], // 'note/standard_en', 'note/standard_nl',
+				out_types: ['anamnese_nl'], // 'note/standard_en', 'note/standard_nl',
 				newTemplate: true,
 				askConsent: true,
 				toggleCodes: true,

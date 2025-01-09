@@ -3,15 +3,31 @@
 	import { goto } from '$app/navigation';
 
 	let ngrokWarning = null;
-	let id = null;
 	let embedLocation;
 	let state;
 
-	async function checkId() {
+	async function checkId(id) {
 		const response = await fetch(`/embed-webhook/callback?id=${id}`);
 		const result = await response.json();
-		if (result === 0) setTimeout(() => checkId(), 1000);
-		else state = result;
+		if (result === 0) setTimeout(() => checkId(id), 1000);
+		else {
+			state = result;
+			setTimeout(() => checkId(id), 1000);
+		}
+	}
+
+	function parseJwt(token) {
+		const base64Url = token.split('.')[1];
+		const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+		const jsonPayload = decodeURIComponent(
+			atob(base64)
+				.split('')
+				.map(function (c) {
+					return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+				})
+				.join('')
+		);
+		return JSON.parse(jsonPayload);
 	}
 
 	onMount(async () => {
@@ -19,11 +35,22 @@
 			ngrokWarning =
 				"Make sure to access the application via ngrok, as localhost can't be reached by the API server for the callback";
 		} else {
-			const response = await fetch('/embed-webhook', { method: 'POST' });
-			const data = await response.json();
-			id = data.id;
-			embedLocation = data.embedLocation;
-			checkId();
+			embedLocation = new URLSearchParams(window.location.search).get('uri') || '';
+			if (embedLocation) {
+				const token = new URL(embedLocation).searchParams.get('token');
+				const decodedToken = parseJwt(token);
+				checkId(decodedToken.sub);
+			} else {
+				const response = await fetch('/embed-webhook', { method: 'POST' });
+				const data = await response.json();
+				if (data.embedLocation) {
+					embedLocation = data.embedLocation;
+					checkId(data.id);
+					goto(`/embed-webhook?uri=${encodeURIComponent(data.embedLocation)}`, {
+						replaceState: true
+					});
+				} else console.log('Problem with response');
+			}
 		}
 	});
 </script>
@@ -54,7 +81,7 @@
 						allow="clipboard-write;microphone {embedLocation}"
 					></iframe>
 				{:else}
-					<p>Something goes wrong with getting the uri</p>
+					<p>Waiting for the embedLocation...</p>
 				{/if}
 			</div>
 		</div>

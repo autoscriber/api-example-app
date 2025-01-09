@@ -9,8 +9,8 @@ export async function GET() {
 		},
 		body: JSON.stringify({
 			communication: { method: 'sse' },
-			in: [{ type: 'audio/conversation', audioType: 'webm', language: 'en' }],
-			out: [{ type: 'note/standard_en' }]
+			in: [{ type: 'conversation', audioType: 'webm', language: 'en' }],
+			out: [{ type: 'standard_en' }]
 		})
 	});
 	return json(await response.json());

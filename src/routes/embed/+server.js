@@ -32,10 +32,15 @@ export async function POST({ request }) {
 					theme: {
 						primaryColor: '#00b7f0' // '#9E2F3C'
 					},
+					webhook: {
+						url: 'mllp://cloverleaftest.rdgg.nl:2181',
+						headers: { pid: 'pid', obr: 'obr' }
+					},
 					specialty: 'GP',
 					newTemplate: true,
 					askConsent: true,
-					toggleCodes: false
+					toggleCodes: false,
+					popupRecording: false
 				}
 			})
 		});

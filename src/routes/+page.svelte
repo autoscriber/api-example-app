@@ -28,6 +28,13 @@
 		<li><a href="/sse">Method server-sent events (post live audio chunks)</a></li>
 		<li><a href="/get">Method get (post an audio recording)</a></li>
 		<li>
+			<a href="/streamhook"
+				>Method webhook (post live audio chunks) <span style="font-weight:bold;color:#00b7f0"
+					>this requires ngrok (!)</span
+				></a
+			>
+		</li>
+		<li>
 			<a href="/webhook"
 				>Method webhook (post a text document) <span style="font-weight:bold;color:#00b7f0"
 					>this requires ngrok (!)</span
@@ -42,4 +49,3 @@
 		<li><a href="/jssdk">Method Javascript SDK</a></li>
 	</ol>
 </nav>
-

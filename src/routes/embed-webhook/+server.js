@@ -19,13 +19,9 @@ export async function POST({ url }) {
 			config: {
 				persist: true,
 				displayName: 'Demo patient',
-				// webhook: {
-				// 	url: url.origin + '/embed-webhook/callback',
-				// 	headers: { Authorization: basicAuth }
-				// },
 				webhook: {
-					url: 'mllp://cloverleaftest.rdgg.nl:2181',
-					headers: { pid: 'pid', obr: 'obr' }
+					url: url.origin + '/embed-webhook/callback',
+					headers: { Authorization: basicAuth }
 				},
 				theme: {
 					primaryColor: '#00b7f0' // '#9E2F3C'

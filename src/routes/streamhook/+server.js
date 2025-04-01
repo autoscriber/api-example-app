@@ -19,7 +19,7 @@ export async function GET({ url }) {
 					headers: { Authorization: basicAuth }
 				}
 			},
-			in: [{ type: 'conversation', audioType: 'wav', language: 'en' }],
+			in: [{ type: 'conversation', audioType: 'webm', language: 'en' }],
 			out: [{ type: 'standard_en' }]
 		})
 	});

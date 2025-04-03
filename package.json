@@ -25,7 +25,7 @@
 	"type": "module",
 	"dependencies": {
 		"@ffmpeg/ffmpeg": "^0.12.15",
-		"autoscriber": "^1.1.1",
+		"autoscriber": "^2.0.5",
 		"fast-json-patch": "^3.1.1",
 		"ffmpeg.js": "^4.2.9003",
 		"socket.io-client": "^4.7.5"

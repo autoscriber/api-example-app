@@ -30,6 +30,19 @@
 		isRecording = true;
 	}
 
+	function pauseRecording() {
+		//Start recording in the SDK, this will automatically update our stateListener with the real-time transcript
+		scribe.pauseRecording();
+		isRecording = true;
+	}
+
+	function resumeRecording() {
+		//Start recording in the SDK, this will automatically update our stateListener with the real-time transcript
+		scribe.resumeRecording();
+		isRecording = true;
+	}
+
+
 	function stopRecording() {
 		isRecording = false;
 		// Stop recording in the SDK, this will automatically kick off output generation
@@ -49,37 +62,36 @@
 		}
 	}
 
+	// Create a connection to the scribe api endpoint
+	const createConnection = async (scribe) => {
+		const { promise, resolve, reject } = Promise.withResolvers();
+		try {
+			const connectionStatus = await scribe.connect();
+			resolve(connectionStatus);
+		} catch (err) {
+			reject(err);
+		}
+		return promise;
+	};
+
 	onMount(async () => {
+		// Do the initial authorization and setup call to /scribe api endpoint
 		const response = await fetch('/jssdk');
 
 		// Assign response from /scribe endpoint to our config variable
-		let config = await response.json();
-
-		console.log(config);
-
-		// Attach our callback function to the sdk, so that state updates can be triggered in our callback function
-		config.callbackfn = stateListener;
-
-		// OPTIONAL, set our specialty to General Practicioner so that we have limited output types based on our specialty
-		config.specialty = SPECIALTIES.GP;
+		let connectionConfig = await response.json();
 
 		// Init the sdk with the config we built
-		scribe = new Scribe(config);
+		scribe = new Scribe(connectionConfig, stateListener);
 
-		// Connect the sdk to server
-		await scribe.connect().then(async (connectionStatus) => {
-			if (connectionStatus.connected) {
-				// Get all available recording devices on the machine using the SDK
-				await scribe
-					.getAvailableRecordingDevices()
-					.then((res) => {
-						microphones = res.availableMicrophones;
-					})
-					.catch((err) => {
-						console.log(err);
-					});
-			}
-		});
+		// Create a connection to the scribe api endpoint
+		await createConnection(scribe);
+
+		// Get all available recording devices on the machine using the SDK
+		const { availableMicrophones } = await scribe.getAvailableRecordingDevices();
+		
+		microphones = availableMicrophones;
+
 	});
 </script>
 
@@ -95,74 +107,75 @@
 	</p>
 </div>
 
-<div class="info-box recorder">
-	{#if state && !state.conversation?.final}
-		<div class="container">
-			{#if microphones.length > 0}
-				<select bind:value={selectedMicrophone} class="dropdown">
-					<option disabled selected>{dropdownMessage}</option>
-					{#each microphones as mic}
-						<option value={mic.deviceId}>{mic.name}</option>
-					{/each}
-				</select>
-			{/if}
+{#if state && !state.conversation?.final}
+	<div class="container">
+		{#if microphones.length > 0}
+			<select bind:value={selectedMicrophone} class="dropdown">
+				<option disabled selected>{dropdownMessage}</option>
+				{#each microphones as mic}
+					<option value={mic.deviceId}>{mic.name}</option>
+				{/each}
+			</select>
+		{/if}
 
-			<button
-				class="btn"
-				disabled={selectedMicrophone === 'Please select a microphone'}
-				on:click={() => {
-					if (isRecording === undefined) {
-						startRecording();
-					} else {
-						stopRecording();
-					}
-				}}>{isRecording ? 'Stop Recording' : 'Start Recording'}</button
-			>
-		</div>
-	{/if}
+		<button
+			class="btn"
+			disabled={selectedMicrophone === 'Please select a microphone'}
+			on:click={() => {
+				if (isRecording === undefined) {
+					startRecording();
+				} else {
+					stopRecording();
+				}
+			}}>{isRecording ? 'Stop Recording' : 'Start Recording'}</button
+		>
+		<button
+		class="btn"
+		on:click={pauseRecording}>Pause</button
+	>
+	<button
+	class="btn"
+	on:click={resumeRecording}>Resume</button
+>
+	</div>
+{/if}
 
-	{#if state && state.conversation?.final}
-		<div class="container">
-			{#if regenerateAvailableTemplates.length > 0}
-				<select bind:value={regenerateSelectedTemplate} class="dropdown">
-					<option disabled selected>{regenerateSelectedTemplate}</option>
-					{#each regenerateAvailableTemplates as template}
-						<option value={template}>{template}</option>
-					{/each}
-				</select>
-			{/if}
-
-			<button
-				class="btn"
-				disabled={regenerateSelectedTemplate === 'Please select a template to regenerate'}
-				on:click={regenerateOutput}>Regenerate output</button
-			>
-		</div>
-
-		{#if availableTemplates.length > 0}
-			<select bind:value={selectedTemplate} class="dropdown">
-				<option disabled selected>{selectedTemplate}</option>
-				{#each availableTemplates as template}
+{#if state && state.conversation?.final}
+	<div class="container">
+		{#if regenerateAvailableTemplates.length > 0}
+			<select bind:value={regenerateSelectedTemplate} class="dropdown">
+				<option disabled selected>{regenerateSelectedTemplate}</option>
+				{#each regenerateAvailableTemplates as template}
 					<option value={template}>{template}</option>
 				{/each}
 			</select>
 		{/if}
+
 		<button
 			class="btn"
-			disabled={selectedTemplate === 'Please select a template to generate'}
-			on:click={generateNewOutput}>Generate new note</button
+			disabled={regenerateSelectedTemplate === 'Please select a template to regenerate'}
+			on:click={regenerateOutput}>Regenerate output</button
 		>
+	</div>
+
+	{#if availableTemplates.length > 0}
+		<select bind:value={selectedTemplate} class="dropdown">
+			<option disabled selected>{selectedTemplate}</option>
+			{#each availableTemplates as template}
+				<option value={template}>{template}</option>
+			{/each}
+		</select>
 	{/if}
-</div>
+	<button
+		class="btn"
+		disabled={selectedTemplate === 'Please select a template to generate'}
+		on:click={generateNewOutput}>Generate new note</button
+	>
+{/if}
 
 <ResponseBox {state} />
 
 <style scoped>
-	.recorder {
-		margin-top: 75px;
-		border-left: 5px solid #f00800;
-	}
-
 	.container {
 		width: 100%;
 		margin-bottom: 5px;
